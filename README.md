@@ -15,3 +15,4 @@ pnpm dev
 
 ## 🛡️ Deployment
 Push to GitHub, link to Vercel, or deploy manually.
+Deployed successfully on Mon, May 26, 2025 11:15:08 PM
