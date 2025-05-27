@@ -1,0 +1,42 @@
+name: Run Tests Before Deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install
+
+      - name: Run ESLint (Code Quality Check)
+        run: pnpm lint
+
+      - name: Run TypeScript Type Checks
+        run: pnpm tsc --noEmit
+
+      - name: Run Unit Tests
+        run: pnpm test
+
+      - name: Run Supabase RLS Security Tests
+        run: pnpm test:rls
+
+      - name: Generate Lighthouse Audit Report
+        run: pnpm lighthouse --output html --output-path ./lighthouse-report.html
+
+      - name: Upload Lighthouse Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-report
+          path: ./lighthouse-report.html
